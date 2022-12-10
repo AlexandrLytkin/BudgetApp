@@ -9,13 +9,18 @@ public class FirstController {
 
 
     @GetMapping
-    public String helloWorld() {
-        return "Hello, web!";
+    public String getApplicationLaunched() {
+        return "Приложение запущено!\n" +
+                "добавьте в конце адрессной строки /info для получения информации ";
     }
 
-    @GetMapping("/path/to/page")
-    public String page(@RequestParam String page) {
-        return "Page: " + page;
+    @GetMapping("/info")
+    public String getInfo() {
+        return "Лыткин Александр Александрович\n" +
+                "Проект Recipes\n" +
+                "Дата создания проекта 10.12.2022\n" +
+                "В проекте будут рецепты, для приготовления изысканных блюд!";
+
     }
 
 }
