@@ -9,5 +9,6 @@ public class BudgetAppApplication {
     public static void main(String[] args) {
         SpringApplication.run(BudgetAppApplication.class, args);
     }
-
+//    пример:
+//    http://localhost:8080/budget/vacation/salary?vacationDays=14&workingDays=21&vacWorkDays=10
 }

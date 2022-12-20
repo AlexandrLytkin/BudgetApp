@@ -15,5 +15,6 @@ public class FirstController {
     public String page(@RequestParam String page) {
         return "Page: "+ page ;
     }
+//пример:
 //http://localhost:8080/budget/vacation/salary?vacationDays=14&workingDays=21&vacWorkDays=10
 }
