@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BudgetController {
 
 
-    private BudgetService budgetService;
+    private final BudgetService budgetService;
 
     public BudgetController(BudgetService budgetService) {
         this.budgetService = budgetService;
@@ -25,16 +25,5 @@ public class BudgetController {
     @GetMapping("/balance")
     public int balance() {
         return budgetService.getBalance();
-    }
-
-    @GetMapping("/vacation/salary")
-    public int vacationBonus(@RequestParam int vacationDays) {
-        return budgetService.getVacationBonus(vacationDays);
-    }
-
-    @GetMapping("/salary")
-    public int salaryWithVacation(@RequestParam int vacationDays, @RequestParam int workingDays, @RequestParam int vacWorkDays) {
-
-        return budgetService.getSalaryWithVacation(vacationDays, vacWorkDays, workingDays);
     }
 }

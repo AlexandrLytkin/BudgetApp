@@ -5,6 +5,7 @@ import java.time.Month;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
 import org.springframework.stereotype.Service;
 import com.example.budgetapp.model.Transaction;
 import com.example.budgetapp.services.BudgetService;
@@ -37,15 +38,18 @@ public class BudgetServiceImpl implements BudgetService {
         return SALARY - SAVING - getAllSpend();
     }
 
-    public void addTransaction(Transaction transaction) {
+    @Override
+    public long addTransaction(Transaction transaction) {
         Map<Long, Transaction> monthTransactions = transactions.getOrDefault(LocalDate.now().getMonth(), new LinkedHashMap<>());
-        monthTransactions.put(lastId++, transaction);
+        monthTransactions.put(lastId, transaction);
+        transactions.put(LocalDate.now().getMonth(), monthTransactions);
+        return lastId++;
     }
 
     @Override
     public Transaction getTransaction(long id) {
-        for (Map<Long, Transaction> transactionsByMonth : transactions.values()) {
-            Transaction transaction = transactionsByMonth.get(id);
+        for (Map<Long, Transaction> transactionByMonth : transactions.values()) {
+            Transaction transaction = transactionByMonth.get(id);
             if (transaction != null) {
                 return transaction;
             }
@@ -53,10 +57,40 @@ public class BudgetServiceImpl implements BudgetService {
         return null;
     }
 
+    @Override
+    public Transaction editTransaction(long id, Transaction transaction) {
+        for (Map<Long, Transaction> transactionByMonth : transactions.values()) {
+            if (transactionByMonth.containsKey(id)) {
+                transactionByMonth.put(id, transaction);
+                return transaction;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteTransaction(long id) {
+        for (Map<Long, Transaction> transactionByMonth : transactions.values()) {
+            if (transactionByMonth.containsKey(id)) {
+                transactionByMonth.remove(id);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void deleteAllTransaction() {
+        transactions = new TreeMap<>();
+    }
+
+
+    @Override
     public int getDailyBalance() {
         return DAILY_BUDGET * LocalDate.now().getDayOfMonth() - getAllSpend();
     }
 
+    @Override
     public int getAllSpend() {
         Map<Long, Transaction> monthTransactions = transactions.getOrDefault(LocalDate.now().getMonth(), new LinkedHashMap<>());
         int sum = 0;

@@ -8,9 +8,15 @@ public interface BudgetService {
 
     int getBalance();
 
-    void addTransaction(Transaction transaction);
+    long addTransaction(Transaction transaction);
 
     Transaction getTransaction(long id);
+
+    Transaction editTransaction(long id, Transaction transaction);
+
+    boolean deleteTransaction(long id);
+
+    void deleteAllTransaction();
 
     int getDailyBalance();
 
