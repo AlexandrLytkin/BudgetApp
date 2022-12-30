@@ -1,5 +1,10 @@
 package com.example.budgetapp.services.impl;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.LinkedHashMap;
@@ -134,6 +139,23 @@ public class BudgetServiceImpl implements BudgetService {
         return salary + getVacationBonus(vacationDaysCount);
     }
 
+    //    public Path createMonthlyReport(Month month) {
+//        transactions.getOrDefault(month, Collections.emptyMap());
+//    }
+    @Override
+    public Path createMonthlyReport(Month month) throws IOException {
+        LinkedHashMap<Long, Transaction> monthlyTransactions = transactions.getOrDefault(month, new LinkedHashMap<>());
+        Path path = filesService.createTempFile("monthlyReport");
+        for (Transaction transaction : monthlyTransactions.values()) {
+            try (Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)) {
+                writer.append(transaction.getCategory().getText() + ": " + transaction.getSum() + "руб. -  " + transaction.getComment());
+                writer.append("\n");
+
+            }
+        }
+        return path;
+    }
+
     private void safeToFile() {
         try {
             String json = new ObjectMapper().writeValueAsString(transactions);
@@ -146,7 +168,7 @@ public class BudgetServiceImpl implements BudgetService {
     private void readFromFile() {
         try {
             String json = filesService.readFromFile();
-            transactions = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Month,LinkedHashMap<Long, Transaction>>>() {
+            transactions = new ObjectMapper().readValue(json, new TypeReference<TreeMap<Month, LinkedHashMap<Long, Transaction>>>() {
             });
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

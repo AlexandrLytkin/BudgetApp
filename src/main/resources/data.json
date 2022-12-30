@@ -1,1 +1,49 @@
-{"DECEMBER":{"0":{"category":"FOOD","sum":1234,"comment":"string"},"1":{"category":"CLOTHES","sum":12024,"comment":"Шнурки"}}}
+{
+  "NOVEMBER": {
+    "0": {
+      "category": "FOOD",
+      "sum": 490,
+      "comment": "бизне-ланч"
+    },
+    "1": {
+      "category": "TRANSPORT",
+      "sum": 328,
+      "comment": "такси на работу"
+    },
+    "2": {
+      "category": "TRANSPORT",
+      "sum": 237,
+      "comment": "такси домой из офиса "
+    },
+    "3": {
+      "category": "HOBBY",
+      "sum": 4000,
+      "comment": "виниловая пластинка"
+    },
+    "4": {
+      "category": "FUN",
+      "sum": 1254,
+      "comment": "пиво в баре"
+    },
+    "5": {
+      "category": "FOOD",
+      "sum": 700,
+      "comment": "бургер"
+    },
+    "6": {
+      "category": "TRANSPORT",
+      "sum": 732,
+      "comment": "такси в бар и обратно"
+    },
+    "7": {
+      "category": "FOOD",
+      "sum": 2353,
+      "comment": "продукты в супермаркете"
+    },
+    "8": {
+      "category": "CLOTHES",
+      "sum": 1999,
+      "comment": "перчатки и шарф"
+    }
+  }
+}

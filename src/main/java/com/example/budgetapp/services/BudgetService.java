@@ -2,6 +2,10 @@ package com.example.budgetapp.services;
 
 import com.example.budgetapp.model.Transaction;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.time.Month;
+
 public interface BudgetService {
 
     int getDailyBudget();
@@ -25,4 +29,9 @@ public interface BudgetService {
     int getVacationBonus(int daysCount);
 
     int getSalaryWithVacation(int vacationDaysCount, int vacationWorkingDaysCount, int workingDaysInMonth);
+
+    //    public Path createMonthlyReport(Month month) {
+    //        transactions.getOrDefault(month, Collections.emptyMap());
+    //    }
+    Path createMonthlyReport(Month month) throws IOException;
 }

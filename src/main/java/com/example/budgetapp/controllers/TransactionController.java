@@ -10,11 +10,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.budgetapp.model.Transaction;
 import com.example.budgetapp.services.BudgetService;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Month;
 
 @RestController
@@ -71,8 +79,22 @@ public class TransactionController {
     }
 
     @GetMapping("/byMonth/{month}")
-    public ResponseEntity<Transaction> getTransactionByMonth(@PathVariable Month month) {
-        return null;
+    public ResponseEntity<Object> getTransactionByMonth(@PathVariable Month month) {
+        try {
+            Path path = budgetService.createMonthlyReport(month); //1 вызываем метод буджет сервиса, плучаем путь к нашему файлу Path path
+            if (Files.size(path) == 0) { // 2 если файл пустой
+                return ResponseEntity.noContent().build(); // 3 возвращаем noConten с 204 ошибкой приложение не ломается
+            }
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(path.toFile())); //4если файл не пустой, то мы берем у этого файла, входной поток new FileInputStream(path.toFile()) заворачиваем его в InputStreamResource
+            return ResponseEntity.ok() //5 формируем Http ответ ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_PLAIN) // 6 указываем тип контента обычный текстовый файл TEXT_PLAIN
+                    .contentLength(Files.size(path)) // 7 указываем размер текстового файла
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + month + " -report.txt \"") // 8 ууказываем название текстового файла, объязательно указываем -report.txt, чтобы открывался во всех случаях
+                    .body(resource); // 9 и отправляем его на клиент
+        } catch (IOException e) { // 10 в случае какой либо ошибки
+            e.printStackTrace(); // 11 печатаем в консоль нашу информацию
+            return ResponseEntity.internalServerError().body(e.toString()); // 12 а также отправляем эту информацию с кодом 500 на клиент internalServerError().body
+        }
     }
 
 

@@ -4,6 +4,7 @@ import com.example.budgetapp.services.FilesService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +38,22 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
-    private boolean cleanDataFile() {
+    @Override
+    public File getDataFile() {   //метод возвращает сам файл
+        return new File(dataFilePath + "/" + dataFileName);
+    }
+
+    @Override
+    public Path createTempFile(String suffix) {
+        try {
+            return Files.createTempFile(Path.of(dataFilePath),"tempeFile", suffix);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean cleanDataFile() { // изменил на публик добавил @Оверайд
         try {
             Path path = Path.of(dataFilePath, dataFileName);
             Files.deleteIfExists(path);
